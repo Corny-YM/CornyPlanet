@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.planetcorny.target.Account;
+import com.example.planetcorny.utilities.Constants;
+import com.example.planetcorny.utilities.PreferenceManager;
 
 public class SignUpActivity extends AppCompatActivity {
     EditText edtName, edtEmail, edtPassword, edtConfirmPassword;
@@ -18,13 +20,23 @@ public class SignUpActivity extends AppCompatActivity {
     TextView tvSignIn;
 
     DbHelper dbHelper = new DbHelper(this);
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        preferenceManager = new PreferenceManager(this);
+
         setContentView(R.layout.activity_sign_up);
         map();
         listeners();
+    }
+
+    private void handleSignIn(String email, String name) {
+        preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+        preferenceManager.putString(Constants.KEY_USER_EMAIL, email);
+        preferenceManager.putString(Constants.KEY_USER_NAME, name);
     }
 
     public void listeners() {
@@ -51,7 +63,10 @@ public class SignUpActivity extends AppCompatActivity {
                 Account acc = new Account(name, email, password);
                 dbHelper.addAccount(acc);
 
+                handleSignIn(email, name);
+
                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }

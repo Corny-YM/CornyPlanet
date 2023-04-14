@@ -54,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
         Boolean isExisted = dbHelper.checkExistedPlanet("0");
         if(isExisted) return;;
 
-        for (int i = 0; i < arr_image.length; i++) {
-            dbHelper.addPlanet(new Items(i, arr_name[i], arr_image[i], arr_desc[i], arr_desc_detail[i]));
+        for (int i = 0; i < arr_name.length; i++) {
+            dbHelper.addPlanet(
+                    new Items(i, arr_name[i], arr_image[i], arr_desc[i], arr_desc_detail[i])
+            );
         }
     }
 
